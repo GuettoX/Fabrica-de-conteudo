@@ -1,3 +1,4 @@
+const supabase = require('../services/supabaseClient')
 const express = require('express')
 const router = express.Router()
 
@@ -30,6 +31,21 @@ router.post('/', async (req, res) => {
     let roteiroEstruturado
     try {
       roteiroEstruturado = JSON.parse(content)
+      await supabase
+  .from('scripts')
+  .insert([
+    {
+      tema,
+      emocao,
+      titulo: roteiroEstruturado.titulo,
+      hook: roteiroEstruturado.hook,
+      introducao: roteiroEstruturado.introducao,
+      desenvolvimento: roteiroEstruturado.desenvolvimento,
+      climax: roteiroEstruturado.climax,
+      encerramento: roteiroEstruturado.encerramento,
+      cta: roteiroEstruturado.cta
+    }
+  ])
     } catch (err) {
       roteiroEstruturado = { texto: content }
     }
