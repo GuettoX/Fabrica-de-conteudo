@@ -1,5 +1,7 @@
 const OpenAI = require('openai')
-
+  console.log('CHAVE OPENAI:')
+  console.log(process.env.OPENAI_API_KEY)
+  
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
