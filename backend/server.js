@@ -15,8 +15,6 @@ app.get('/', (req, res) => {
   res.send('GuettoX API Online')
 })
 
-app.use('/generate-script', generateScriptRoute)
-
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {

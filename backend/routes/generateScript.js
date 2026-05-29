@@ -1,42 +1,79 @@
+const express = require('express')
+const router = express.Router()
+
+const generateText = require('../services/openaiService')
+const supabase = require('../services/supabaseClient')
+
 router.post('/', async (req, res) => {
-  try {
+try {
 
-    const { tema, emocao } = req.body
+```
+const { tema, emocao } = req.body
 
-    // OpenAI aqui...
+const prompt = `
+```
 
-    roteiroEstruturado = JSON.parse(content)
+Crie um roteiro cinematográfico para YouTube.
 
-    const { data, error } = await supabase
-      .from('scripts')
-      .insert([
-        {
-          tema,
-          emocao,
-          titulo: roteiroEstruturado.titulo,
-          hook: roteiroEstruturado.hook,
-          introducao: roteiroEstruturado.introducao,
-          desenvolvimento: roteiroEstruturado.desenvolvimento,
-          climax: roteiroEstruturado.climax,
-          encerramento: roteiroEstruturado.encerramento,
-          cta: roteiroEstruturado.cta
-        }
-      ])
+Tema: ${tema}
+Emoção principal: ${emocao}
 
-    if (error) {
-      console.log('ERRO SUPABASE:')
-      console.log(error)
-    } else {
-      console.log('SALVO NO SUPABASE')
+Responda SOMENTE em JSON válido:
+
+{
+"titulo": "...",
+"hook": "...",
+"introducao": "...",
+"desenvolvimento": "...",
+"climax": "...",
+"encerramento": "...",
+"cta": "..."
+}
+`
+
+```
+const content = await generateText(prompt)
+
+const roteiroEstruturado = JSON.parse(content)
+
+const { error } = await supabase
+  .from('scripts')
+  .insert([
+    {
+      tema,
+      emocao,
+      titulo: roteiroEstruturado.titulo,
+      hook: roteiroEstruturado.hook,
+      introducao: roteiroEstruturado.introducao,
+      desenvolvimento: roteiroEstruturado.desenvolvimento,
+      climax: roteiroEstruturado.climax,
+      encerramento: roteiroEstruturado.encerramento,
+      cta: roteiroEstruturado.cta
     }
+  ])
 
-    res.json(roteiroEstruturado)
+if (error) {
+  console.log('ERRO SUPABASE:')
+  console.log(error)
+} else {
+  console.log('SALVO NO SUPABASE')
+}
 
-  } catch (error) {
-    console.log(error)
+res.json(roteiroEstruturado)
+```
 
-    res.status(500).json({
-      erro: 'Erro ao gerar roteiro'
-    })
-  }
+} catch (error) {
+
+```
+console.log(error)
+
+res.status(500).json({
+  erro: 'Erro ao gerar roteiro'
 })
+```
+
+}
+})
+
+module.exports = router
+
