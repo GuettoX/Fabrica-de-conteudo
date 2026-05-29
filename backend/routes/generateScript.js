@@ -1,22 +1,42 @@
-const { data, error } = await supabase
-  .from('scripts')
-  .insert([
-    {
-      tema,
-      emocao,
-      titulo: roteiroEstruturado.titulo,
-      hook: roteiroEstruturado.hook,
-      introducao: roteiroEstruturado.introducao,
-      desenvolvimento: roteiroEstruturado.desenvolvimento,
-      climax: roteiroEstruturado.climax,
-      encerramento: roteiroEstruturado.encerramento,
-      cta: roteiroEstruturado.cta
-    }
-  ])
+router.post('/', async (req, res) => {
+  try {
 
-if (error) {
-  console.log('ERRO SUPABASE:')
-  console.log(error)
-} else {
-  console.log('SALVO NO SUPABASE')
-}
+    const { tema, emocao } = req.body
+
+    // OpenAI aqui...
+
+    roteiroEstruturado = JSON.parse(content)
+
+    const { data, error } = await supabase
+      .from('scripts')
+      .insert([
+        {
+          tema,
+          emocao,
+          titulo: roteiroEstruturado.titulo,
+          hook: roteiroEstruturado.hook,
+          introducao: roteiroEstruturado.introducao,
+          desenvolvimento: roteiroEstruturado.desenvolvimento,
+          climax: roteiroEstruturado.climax,
+          encerramento: roteiroEstruturado.encerramento,
+          cta: roteiroEstruturado.cta
+        }
+      ])
+
+    if (error) {
+      console.log('ERRO SUPABASE:')
+      console.log(error)
+    } else {
+      console.log('SALVO NO SUPABASE')
+    }
+
+    res.json(roteiroEstruturado)
+
+  } catch (error) {
+    console.log(error)
+
+    res.status(500).json({
+      erro: 'Erro ao gerar roteiro'
+    })
+  }
+})
