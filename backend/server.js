@@ -9,7 +9,10 @@ app.use(cors())
 app.use(express.json())
 
 const generateScriptRoute = require('./routes/generateScript')
+const searchMediaRoute = require('./routes/searchMedia')
+
 app.use('/generate-script', generateScriptRoute)
+app.use('/search-media', searchMediaRoute)
 
 app.get('/', (req, res) => {
   res.send('GuettoX API Online')
