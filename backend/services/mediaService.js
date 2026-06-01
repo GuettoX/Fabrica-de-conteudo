@@ -6,11 +6,12 @@ async function searchPixabay(keyword) {
     'https://pixabay.com/api/',
     {
       params: {
-        key: process.env.PIXABAY_API_KEY,
-        q: keyword,
-        image_type: 'photo',
-        per_page: 4
-      }
+  key: process.env.PIXABAY_API_KEY,
+  q: keyword,
+  image_type: 'photo',
+  per_page: 20,
+  page: page || 1
+}
     }
   )
 
