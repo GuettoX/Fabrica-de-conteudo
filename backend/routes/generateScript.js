@@ -27,7 +27,12 @@ Responda SOMENTE em JSON válido:
   "cta": "..."
 }
 `;
+
+console.time('GERAR ROTEIRO')
+
 const content = await generateText(prompt)
+
+console.timeEnd('GERAR ROTEIRO')
 
     const roteiroEstruturado = JSON.parse(content)
 
