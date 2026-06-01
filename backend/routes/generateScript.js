@@ -7,7 +7,13 @@ const supabase = require('../services/supabaseClient')
 router.post('/', async (req, res) => {
   try {
 
-    const { tema, emocao } = req.body
+    const { tema, emocao, user_id } = req.body
+
+    if (!user_id) {
+      return res.status(400).json({
+        erro: 'user_id obrigatório'
+      })
+    }
 
     const prompt = `
 Crie um roteiro cinematográfico para YouTube.
@@ -26,13 +32,13 @@ Responda SOMENTE em JSON válido:
   "encerramento": "...",
   "cta": "..."
 }
-`;
+`
 
-console.time('GERAR ROTEIRO')
+    console.time('GERAR ROTEIRO')
 
-const content = await generateText(prompt)
+    const content = await generateText(prompt)
 
-console.timeEnd('GERAR ROTEIRO')
+    console.timeEnd('GERAR ROTEIRO')
 
     const roteiroEstruturado = JSON.parse(content)
 
@@ -40,6 +46,7 @@ console.timeEnd('GERAR ROTEIRO')
       .from('scripts')
       .insert([
         {
+          user_id,
           tema,
           emocao,
           titulo: roteiroEstruturado.titulo,
@@ -73,4 +80,3 @@ console.timeEnd('GERAR ROTEIRO')
 })
 
 module.exports = router
-
