@@ -7,9 +7,9 @@ router.post('/', async (req, res) => {
 
   try {
 
-    const { keyword } = req.body
+    const { keyword, page } = req.body
 
-    const results = await searchPixabay(keyword)
+    const results = await searchPixabay(keyword, page)
 
     res.json(results)
 
