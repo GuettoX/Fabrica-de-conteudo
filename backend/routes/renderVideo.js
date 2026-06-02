@@ -5,7 +5,19 @@ const supabase = require('../services/supabaseClient')
 
 router.post('/', async (req, res) => {
   try {
+    console.log('====================')
+    console.log('RENDER REQUEST')
+    console.log(req.body)
+    console.log('====================')
+
     const { scriptId } = req.body
+
+    if (!scriptId) {
+      return res.status(400).json({
+        success: false,
+        error: 'scriptId não informado'
+      })
+    }
 
     const { data: scenes, error: scenesError } = await supabase
       .from('scenes')
@@ -13,7 +25,9 @@ router.post('/', async (req, res) => {
       .eq('script_id', scriptId)
       .order('ordem')
 
-    if (scenesError) throw scenesError
+    if (scenesError) {
+      throw scenesError
+    }
 
     const { data: voiceover, error: voiceError } = await supabase
       .from('voiceovers')
@@ -21,17 +35,25 @@ router.post('/', async (req, res) => {
       .eq('script_id', scriptId)
       .single()
 
-    if (voiceError) throw voiceError
+    if (voiceError) {
+      throw voiceError
+    }
+
+    console.log('SCENES ENCONTRADAS:', scenes.length)
+    console.log('AUDIO URL:', voiceover.audio_url)
+    console.log('DURAÇÃO AUDIO:', voiceover.duracao)
 
     return res.json({
       success: true,
       totalScenes: scenes.length,
       audioFound: !!voiceover,
       audioUrl: voiceover.audio_url,
-      audioDuration: voiceover.duracao
+      audioDuration: voiceover.duracao,
+      message: 'Backend render funcionando'
     })
 
   } catch (error) {
+    console.error('ERRO RENDER VIDEO')
     console.error(error)
 
     return res.status(500).json({
