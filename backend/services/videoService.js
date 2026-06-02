@@ -131,14 +131,22 @@ async function createTestVideo() {
         resolve(outputPath)
       })
 
-      .on('error', (err) => {
-        console.error('======================')
-        console.error('ERRO FFMPEG')
-        console.error('======================')
-        console.error(err)
+      .on('error', (err, stdout, stderr) => {
+  console.error('======================')
+  console.error('ERRO FFMPEG')
+  console.error('======================')
 
-        reject(err)
-      })
+  console.error('ERROR:')
+  console.error(err)
+
+  console.error('STDOUT:')
+  console.error(stdout)
+
+  console.error('STDERR:')
+  console.error(stderr)
+
+  reject(err)
+})
 
       .save(outputPath)
   })
