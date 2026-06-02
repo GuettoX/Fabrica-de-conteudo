@@ -10,9 +10,11 @@ app.use(express.json())
 
 const generateScriptRoute = require('./routes/generateScript')
 const searchMediaRoute = require('./routes/searchMedia')
+const renderVideoRoute = require('./routes/renderVideo')
 
 app.use('/generate-script', generateScriptRoute)
 app.use('/search-media', searchMediaRoute)
+app.use('/render-video', renderVideoRoute)
 
 app.get('/', (req, res) => {
   res.send('GuettoX API Online')
