@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const supabase = require('../services/supabaseClient')
+const { testDownloads } = require('../services/videoService')
 
 router.post('/', async (req, res) => {
   try {
@@ -42,6 +43,8 @@ router.post('/', async (req, res) => {
     console.log('SCENES ENCONTRADAS:', scenes.length)
     console.log('AUDIO URL:', voiceover.audio_url)
     console.log('DURAÇÃO AUDIO:', voiceover.duracao)
+
+    await testDownloads(scenes, voiceover)
 
     return res.json({
       success: true,
