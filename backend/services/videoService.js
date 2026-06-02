@@ -187,7 +187,13 @@ async function updateVideoRecord(videoId, videoUrl) {
   console.log('ATUALIZANDO TABELA')
   console.log('======================')
 
-  const { error } = await supabase
+  console.log('VIDEO ID:')
+  console.log(videoId)
+
+  console.log('VIDEO URL:')
+  console.log(videoUrl)
+
+  const { data, error } = await supabase
     .from('videos')
     .update({
       status: 'completed',
@@ -195,12 +201,18 @@ async function updateVideoRecord(videoId, videoUrl) {
       updated_at: new Date().toISOString()
     })
     .eq('id', videoId)
+    .select()
+
+  console.log('RESULTADO UPDATE:')
+  console.log(data)
 
   if (error) {
+    console.error('ERRO UPDATE:')
+    console.error(error)
     throw error
   }
 
-  console.log('VIDEO ATUALIZADO')
+  console.log('VIDEO ATUALIZADO COM SUCESSO')
 }
 
 module.exports = {
