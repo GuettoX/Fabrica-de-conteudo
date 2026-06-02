@@ -5,7 +5,9 @@ const supabase = require('../services/supabaseClient')
 
 const {
   testDownloads,
-  createTestVideo
+  createTestVideo,
+  uploadVideoToSupabase,
+  updateVideoRecord
 } = require('../services/videoService')
 
 router.post('/', async (req, res) => {
@@ -59,15 +61,32 @@ router.post('/', async (req, res) => {
     console.log(videoPath)
     console.log('====================')
 
+    const videoUrl = await uploadVideoToSupabase(
+      videoPath,
+      scriptId
+    )
+
+    console.log('====================')
+    console.log('VIDEO ENVIADO')
+    console.log(videoUrl)
+    console.log('====================')
+
+    if (videoId) {
+      await updateVideoRecord(
+        videoId,
+        videoUrl
+      )
+    }
+
     return res.json({
       success: true,
       videoId,
+      videoUrl,
       totalScenes: scenes.length,
       audioFound: !!voiceover,
       audioUrl: voiceover.audio_url,
       audioDuration: voiceover.duracao,
-      videoPath,
-      message: 'Video teste criado com sucesso'
+      message: 'Video criado e enviado para Supabase'
     })
 
   } catch (error) {
@@ -75,6 +94,20 @@ router.post('/', async (req, res) => {
     console.error('ERRO RENDER VIDEO')
     console.error('====================')
     console.error(error)
+
+    try {
+      if (req.body.videoId) {
+        await supabase
+          .from('videos')
+          .update({
+            status: 'error',
+            erro: error.message
+          })
+          .eq('id', req.body.videoId)
+      }
+    } catch (dbError) {
+      console.error(dbError)
+    }
 
     return res.status(500).json({
       success: false,

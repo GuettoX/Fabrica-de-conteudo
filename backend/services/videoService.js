@@ -5,6 +5,8 @@ const axios = require('axios')
 const ffmpeg = require('fluent-ffmpeg')
 const ffmpegPath = require('ffmpeg-static')
 
+const supabase = require('./supabaseClient')
+
 ffmpeg.setFfmpegPath(ffmpegPath)
 
 async function downloadFile(url, outputPath) {
@@ -142,7 +144,60 @@ async function createTestVideo() {
   })
 }
 
+async function uploadVideoToSupabase(videoPath, scriptId) {
+  console.log('======================')
+  console.log('UPLOAD VIDEO SUPABASE')
+  console.log('======================')
+
+  const fileBuffer = fs.readFileSync(videoPath)
+
+  const fileName = `${scriptId}-${Date.now()}.mp4`
+
+  const { error } = await supabase.storage
+    .from('videos')
+    .upload(fileName, fileBuffer, {
+      contentType: 'video/mp4',
+      upsert: true
+    })
+
+  if (error) {
+    throw error
+  }
+
+  const { data } = supabase.storage
+    .from('videos')
+    .getPublicUrl(fileName)
+
+  console.log('VIDEO URL:')
+  console.log(data.publicUrl)
+
+  return data.publicUrl
+}
+
+async function updateVideoRecord(videoId, videoUrl) {
+  console.log('======================')
+  console.log('ATUALIZANDO TABELA')
+  console.log('======================')
+
+  const { error } = await supabase
+    .from('videos')
+    .update({
+      status: 'completed',
+      video_url: videoUrl,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', videoId)
+
+  if (error) {
+    throw error
+  }
+
+  console.log('VIDEO ATUALIZADO')
+}
+
 module.exports = {
   testDownloads,
-  createTestVideo
+  createTestVideo,
+  uploadVideoToSupabase,
+  updateVideoRecord
 }
