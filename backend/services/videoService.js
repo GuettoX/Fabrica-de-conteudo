@@ -2,6 +2,11 @@ const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
 
+const ffmpeg = require('fluent-ffmpeg')
+const ffmpegPath = require('ffmpeg-static')
+
+ffmpeg.setFfmpegPath(ffmpegPath)
+
 async function downloadFile(url, outputPath) {
   console.log('=================================')
   console.log('BAIXANDO ARQUIVO')
@@ -83,6 +88,61 @@ async function testDownloads(scenes, voiceover) {
   }
 }
 
+async function createTestVideo() {
+  return new Promise((resolve, reject) => {
+    const imagePath = path.join(__dirname, '../temp/images/scene1.jpg')
+
+    const audioPath = path.join(__dirname, '../temp/audio/voiceover.mp3')
+
+    const outputPath = path.join(__dirname, '../temp/video.mp4')
+
+    console.log('======================')
+    console.log('INICIANDO FFMPEG')
+    console.log('======================')
+
+    ffmpeg()
+      .input(imagePath)
+      .loop(10)
+
+      .input(audioPath)
+
+      .videoCodec('libx264')
+      .audioCodec('aac')
+
+      .outputOptions([
+        '-shortest',
+        '-pix_fmt',
+        'yuv420p'
+      ])
+
+      .on('start', (commandLine) => {
+        console.log('FFMPEG COMMAND:')
+        console.log(commandLine)
+      })
+
+      .on('end', () => {
+        console.log('======================')
+        console.log('VIDEO CRIADO')
+        console.log(outputPath)
+        console.log('======================')
+
+        resolve(outputPath)
+      })
+
+      .on('error', (err) => {
+        console.error('======================')
+        console.error('ERRO FFMPEG')
+        console.error('======================')
+        console.error(err)
+
+        reject(err)
+      })
+
+      .save(outputPath)
+  })
+}
+
 module.exports = {
-  testDownloads
+  testDownloads,
+  createTestVideo
 }

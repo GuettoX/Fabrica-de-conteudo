@@ -2,7 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 const supabase = require('../services/supabaseClient')
-const { testDownloads } = require('../services/videoService')
+
+const {
+  testDownloads,
+  createTestVideo
+} = require('../services/videoService')
 
 router.post('/', async (req, res) => {
   try {
@@ -11,7 +15,7 @@ router.post('/', async (req, res) => {
     console.log(req.body)
     console.log('====================')
 
-    const { scriptId } = req.body
+    const { scriptId, videoId } = req.body
 
     if (!scriptId) {
       return res.status(400).json({
@@ -46,17 +50,30 @@ router.post('/', async (req, res) => {
 
     await testDownloads(scenes, voiceover)
 
+    console.log('DOWNLOADS FINALIZADOS')
+
+    const videoPath = await createTestVideo()
+
+    console.log('====================')
+    console.log('VIDEO PATH')
+    console.log(videoPath)
+    console.log('====================')
+
     return res.json({
       success: true,
+      videoId,
       totalScenes: scenes.length,
       audioFound: !!voiceover,
       audioUrl: voiceover.audio_url,
       audioDuration: voiceover.duracao,
-      message: 'Backend render funcionando'
+      videoPath,
+      message: 'Video teste criado com sucesso'
     })
 
   } catch (error) {
+    console.error('====================')
     console.error('ERRO RENDER VIDEO')
+    console.error('====================')
     console.error(error)
 
     return res.status(500).json({
