@@ -120,19 +120,20 @@ async function createTestVideo() {
     console.log('======================')
 
     ffmpeg()
-      .input(imagePath)
-      .loop(10)
+  .input(imagePath)
+  .loop(10)
 
-      .input(audioPath)
+  .input(audioPath)
 
-      .videoCodec('libx264')
-      .audioCodec('aac')
+  .videoCodec('libx264')
+  .audioCodec('aac')
 
-      .outputOptions([
-        '-shortest',
-        '-pix_fmt',
-        'yuv420p'
-      ])
+  .size('1280x720')
+
+  .outputOptions([
+    '-shortest',
+    '-pix_fmt yuv420p'
+  ])
 
       .on('start', (commandLine) => {
         console.log('FFMPEG COMMAND:')
