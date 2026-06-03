@@ -270,6 +270,22 @@ async function updateVideoRecord(videoId, videoUrl) {
     throw error
   }
 
+  const { data: checkVideo, error: checkError } =
+    await supabase
+      .from('videos')
+      .select('*')
+      .eq('id', videoId)
+      .single()
+
+  console.log('======================')
+  console.log('VERIFICACAO FINAL')
+  console.log('======================')
+  console.log(checkVideo)
+
+  if (checkError) {
+    console.error(checkError)
+  }
+
   console.log('VIDEO ATUALIZADO COM SUCESSO')
 }
 
