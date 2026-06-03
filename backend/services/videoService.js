@@ -107,7 +107,10 @@ async function testDownloads(scenes, voiceover) {
   }
 }
 
-async function createTestVideo() {
+async function createTestVideo(
+  totalScenes,
+  audioDuration
+) {
   return new Promise((resolve, reject) => {
     const imagesDir = path.join(__dirname, '../temp/images')
 
@@ -137,12 +140,23 @@ async function createTestVideo() {
 
     console.log('TOTAL IMAGENS:', imageFiles.length)
 
+    const durationPerScene =
+  audioDuration / totalScenes
+
+console.log('======================')
+console.log('DURACAO AUDIO:', audioDuration)
+console.log('TOTAL CENAS:', totalScenes)
+console.log(
+  'DURACAO POR CENA:',
+  durationPerScene
+)
+console.log('======================')
     let slidesContent = ''
 
     imageFiles.forEach((file) => {
-      slidesContent += `file '${path.join(imagesDir, file)}'\n`
-      slidesContent += `duration 5\n`
-    })
+  slidesContent += `file '${path.join(imagesDir, file)}'\n`
+  slidesContent += `duration ${durationPerScene}\n`
+})
 
     if (imageFiles.length > 0) {
       slidesContent += `file '${path.join(

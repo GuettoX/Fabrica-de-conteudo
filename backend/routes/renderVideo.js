@@ -54,7 +54,10 @@ router.post('/', async (req, res) => {
 
     console.log('DOWNLOADS FINALIZADOS')
 
-    const videoPath = await createTestVideo()
+    const videoPath = await createTestVideo(
+  scenes.length,
+  voiceover.duracao
+)
 
     console.log('====================')
     console.log('VIDEO PATH')
