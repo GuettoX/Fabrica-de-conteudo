@@ -109,35 +109,76 @@ async function testDownloads(scenes, voiceover) {
 
 async function createTestVideo() {
   return new Promise((resolve, reject) => {
-    const imagePath = path.join(__dirname, '../temp/images/scene1.jpg')
+    const imagesDir = path.join(__dirname, '../temp/images')
 
-    const audioPath = path.join(__dirname, '../temp/audio/voiceover.mp3')
+    const audioPath = path.join(
+      __dirname,
+      '../temp/audio/voiceover.mp3'
+    )
 
-    const outputPath = path.join(__dirname, '../temp/video.mp4')
+    const outputPath = path.join(
+      __dirname,
+      '../temp/video.mp4'
+    )
+
+    const slidesFile = path.join(
+      __dirname,
+      '../temp/slides.txt'
+    )
 
     console.log('======================')
-    console.log('INICIANDO FFMPEG')
+    console.log('CRIANDO SLIDESHOW')
     console.log('======================')
+
+    const imageFiles = fs
+      .readdirSync(imagesDir)
+      .filter(file => file.endsWith('.jpg'))
+      .sort()
+
+    console.log('TOTAL IMAGENS:', imageFiles.length)
+
+    let slidesContent = ''
+
+    imageFiles.forEach((file) => {
+      slidesContent += `file '${path.join(imagesDir, file)}'\n`
+      slidesContent += `duration 5\n`
+    })
+
+    if (imageFiles.length > 0) {
+      slidesContent += `file '${path.join(
+        imagesDir,
+        imageFiles[imageFiles.length - 1]
+      )}'\n`
+    }
+
+    fs.writeFileSync(slidesFile, slidesContent)
+
+    console.log('SLIDES.TXT CRIADO')
 
     ffmpeg()
-  .input(imagePath)
-  .loop(10)
+      .input(slidesFile)
+      .inputOptions([
+        '-f concat',
+        '-safe 0'
+      ])
 
-  .input(audioPath)
+      .input(audioPath)
 
-  .videoCodec('libx264')
-  .audioCodec('aac')
+      .videoCodec('libx264')
+      .audioCodec('aac')
 
-  .size('1280x720')
+      .size('1280x720')
 
-  .outputOptions([
-    '-shortest',
-    '-pix_fmt yuv420p'
-  ])
+      .outputOptions([
+        '-pix_fmt yuv420p',
+        '-shortest'
+      ])
 
       .on('start', (commandLine) => {
-        console.log('FFMPEG COMMAND:')
+        console.log('======================')
+        console.log('FFMPEG COMMAND')
         console.log(commandLine)
+        console.log('======================')
       })
 
       .on('end', () => {
@@ -150,21 +191,20 @@ async function createTestVideo() {
       })
 
       .on('error', (err, stdout, stderr) => {
-  console.error('======================')
-  console.error('ERRO FFMPEG')
-  console.error('======================')
+        console.error('======================')
+        console.error('ERRO FFMPEG')
+        console.error('======================')
 
-  console.error('ERROR:')
-  console.error(err)
+        console.error(err)
 
-  console.error('STDOUT:')
-  console.error(stdout)
+        console.error('STDOUT:')
+        console.error(stdout)
 
-  console.error('STDERR:')
-  console.error(stderr)
+        console.error('STDERR:')
+        console.error(stderr)
 
-  reject(err)
-})
+        reject(err)
+      })
 
       .save(outputPath)
   })
