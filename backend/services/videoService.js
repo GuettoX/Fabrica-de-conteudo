@@ -57,25 +57,42 @@ async function testDownloads(scenes, voiceover) {
 
     console.log('TOTAL DE CENAS:', scenes.length)
 
-    if (scenes.length > 0) {
-      const firstImage = scenes[0].media_url
+    for (let i = 0; i < scenes.length; i++) {
+      const scene = scenes[i]
 
-      console.log('PRIMEIRA IMAGEM:')
-      console.log(firstImage)
+      const imagePath = path.join(
+        imagesDir,
+        `scene${i + 1}.jpg`
+      )
 
-      const imagePath = path.join(imagesDir, 'scene1.jpg')
+      console.log('----------------------')
+      console.log(`BAIXANDO CENA ${i + 1}`)
+      console.log(scene.media_url)
 
-      await downloadFile(firstImage, imagePath)
+      await downloadFile(
+        scene.media_url,
+        imagePath
+      )
 
-      console.log('IMAGEM OK')
+      console.log(`CENA ${i + 1} OK`)
     }
+
+    console.log('======================')
+    console.log('TODAS AS IMAGENS BAIXADAS')
+    console.log('======================')
+
+    const audioPath = path.join(
+      audioDir,
+      'voiceover.mp3'
+    )
 
     console.log('AUDIO URL:')
     console.log(voiceover.audio_url)
 
-    const audioPath = path.join(audioDir, 'voiceover.mp3')
-
-    await downloadFile(voiceover.audio_url, audioPath)
+    await downloadFile(
+      voiceover.audio_url,
+      audioPath
+    )
 
     console.log('AUDIO OK')
 
