@@ -257,7 +257,8 @@ async function uploadVideoToSupabase(videoPath, scriptId) {
 async function updateVideoRecord(
   videoId,
   videoUrl,
-  thumbnailUrl
+  thumbnailUrl,
+  duracao
 ) {
   console.log('======================')
   console.log('ATUALIZANDO TABELA')
@@ -272,12 +273,16 @@ async function updateVideoRecord(
   console.log('THUMBNAIL URL:')
   console.log(thumbnailUrl)
 
+  console.log('DURACAO:')
+  console.log(duracao)
+
   const { data, error } = await supabase
     .from('videos')
     .update({
   status: 'completed',
   video_url: videoUrl,
   thumbnail_url: thumbnailUrl,
+  duracao: duracao,
   updated_at: new Date().toISOString()
 })
     .eq('id', videoId)

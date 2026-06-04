@@ -79,12 +79,16 @@ router.post('/', async (req, res) => {
     ? scenes[0].media_url
     : null
 
+const duration =
+  voiceover?.duracao || null
+
 if (videoId) {
   await updateVideoRecord(
-    videoId,
-    videoUrl,
-    thumbnailUrl
-  )
+  videoId,
+  videoUrl,
+  thumbnailUrl,
+  duration
+)
 }
 
     return res.json({
