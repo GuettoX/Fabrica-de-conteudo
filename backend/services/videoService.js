@@ -254,7 +254,11 @@ async function uploadVideoToSupabase(videoPath, scriptId) {
   return data.publicUrl
 }
 
-async function updateVideoRecord(videoId, videoUrl) {
+async function updateVideoRecord(
+  videoId,
+  videoUrl,
+  thumbnailUrl
+) {
   console.log('======================')
   console.log('ATUALIZANDO TABELA')
   console.log('======================')
@@ -265,13 +269,17 @@ async function updateVideoRecord(videoId, videoUrl) {
   console.log('VIDEO URL:')
   console.log(videoUrl)
 
+  console.log('THUMBNAIL URL:')
+  console.log(thumbnailUrl)
+
   const { data, error } = await supabase
     .from('videos')
     .update({
-      status: 'completed',
-      video_url: videoUrl,
-      updated_at: new Date().toISOString()
-    })
+  status: 'completed',
+  video_url: videoUrl,
+  thumbnail_url: thumbnailUrl,
+  updated_at: new Date().toISOString()
+})
     .eq('id', videoId)
     .select()
 

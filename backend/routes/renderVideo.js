@@ -74,12 +74,18 @@ router.post('/', async (req, res) => {
     console.log(videoUrl)
     console.log('====================')
 
-    if (videoId) {
-      await updateVideoRecord(
-        videoId,
-        videoUrl
-      )
-    }
+    const thumbnailUrl =
+  scenes.length > 0
+    ? scenes[0].media_url
+    : null
+
+if (videoId) {
+  await updateVideoRecord(
+    videoId,
+    videoUrl,
+    thumbnailUrl
+  )
+}
 
     return res.json({
       success: true,
