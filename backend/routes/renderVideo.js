@@ -64,10 +64,17 @@ router.post('/', async (req, res) => {
     console.log(videoPath)
     console.log('====================')
 
-    const videoUrl = await uploadVideoToSupabase(
-      videoPath,
-      scriptId
-    )
+    const uploadResult =
+  await uploadVideoToSupabase(
+    videoPath,
+    scriptId
+  )
+
+const videoUrl =
+  uploadResult.videoUrl
+
+const fileSizeMb =
+  uploadResult.fileSizeMb
 
     console.log('====================')
     console.log('VIDEO ENVIADO')
@@ -87,7 +94,8 @@ if (videoId) {
   videoId,
   videoUrl,
   thumbnailUrl,
-  duration
+  duration,
+  fileSizeMb
 )
 }
 

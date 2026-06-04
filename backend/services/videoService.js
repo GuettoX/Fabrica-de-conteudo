@@ -225,6 +225,15 @@ console.log('======================')
 }
 
 async function uploadVideoToSupabase(videoPath, scriptId) {
+
+  const stats = fs.statSync(videoPath)
+
+const fileSizeMb = Number(
+  (stats.size / 1024 / 1024).toFixed(2)
+)
+
+  console.log('TAMANHO MB:')
+  console.log(fileSizeMb)
   console.log('======================')
   console.log('UPLOAD VIDEO SUPABASE')
   console.log('======================')
@@ -251,14 +260,17 @@ async function uploadVideoToSupabase(videoPath, scriptId) {
   console.log('VIDEO URL:')
   console.log(data.publicUrl)
 
-  return data.publicUrl
+ return 
+  videoUrl: data.publicUrl,
+  fileSizeMb
 }
 
 async function updateVideoRecord(
   videoId,
   videoUrl,
   thumbnailUrl,
-  duracao
+  duracao,
+  tamanhoMb
 ) {
   console.log('======================')
   console.log('ATUALIZANDO TABELA')
@@ -283,6 +295,7 @@ async function updateVideoRecord(
   video_url: videoUrl,
   thumbnail_url: thumbnailUrl,
   duracao: duracao,
+  tamanho_mb: tamanhoMb,
   updated_at: new Date().toISOString()
 })
     .eq('id', videoId)
