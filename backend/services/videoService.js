@@ -264,6 +264,7 @@ return {
   videoUrl: data.publicUrl,
   fileSizeMb
 }
+}
 
 async function updateVideoRecord(
   videoId,
