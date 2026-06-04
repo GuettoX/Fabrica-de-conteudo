@@ -254,13 +254,13 @@ const fileSizeMb = Number(
   }
 
   const { data } = supabase.storage
-    .from('videos')
-    .getPublicUrl(fileName)
+  .from('videos')
+  .getPublicUrl(fileName)
 
-  console.log('VIDEO URL:')
-  console.log(data.publicUrl)
+console.log('VIDEO URL:')
+console.log(data.publicUrl)
 
- return 
+return {
   videoUrl: data.publicUrl,
   fileSizeMb
 }
