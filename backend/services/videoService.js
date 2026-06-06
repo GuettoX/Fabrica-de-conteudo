@@ -125,14 +125,13 @@ async function createSceneVideo(
       ])
 
       .videoFilters(
-        `zoompan=z='min(zoom+0.0015,1.15)':d=25*s=${1280}x${720}`
+        "zoompan=z='min(zoom+0.0015,1.15)':d=125:s=1280x720"
       )
-
-      .duration(duration)
 
       .videoCodec('libx264')
 
       .outputOptions([
+        '-t ' + duration,
         '-pix_fmt yuv420p'
       ])
 
@@ -147,8 +146,16 @@ async function createSceneVideo(
         resolve(outputPath)
       })
 
-      .on('error', (err) => {
+      .on('error', (err, stdout, stderr) => {
+        console.error('======================')
+        console.error('ERRO CENA')
+        console.error('======================')
+
         console.error(err)
+
+        console.error('STDERR:')
+        console.error(stderr)
+
         reject(err)
       })
 
