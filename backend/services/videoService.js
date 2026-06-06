@@ -47,9 +47,11 @@ async function testDownloads(scenes, voiceover) {
 
     const imagesDir = path.join(tempDir, 'images')
     const audioDir = path.join(tempDir, 'audio')
+    const scenesDir = path.join(tempDir, 'scenes')
 
     fs.mkdirSync(imagesDir, { recursive: true })
     fs.mkdirSync(audioDir, { recursive: true })
+    fs.mkdirSync(scenesDir, { recursive: true })
 
     console.log('======================')
     console.log('PASTAS TEMP CRIADAS')
@@ -106,6 +108,54 @@ async function testDownloads(scenes, voiceover) {
     throw error
   }
 }
+async function createSceneVideo(
+  imagePath,
+  duration,
+  outputPath
+) {
+
+  return new Promise((resolve, reject) => {
+
+    ffmpeg()
+
+      .input(imagePath)
+
+      .inputOptions([
+        '-loop 1'
+      ])
+
+      .videoFilters(
+        `zoompan=z='min(zoom+0.0015,1.15)':d=25*s=${1280}x${720}`
+      )
+
+      .duration(duration)
+
+      .videoCodec('libx264')
+
+      .outputOptions([
+        '-pix_fmt yuv420p'
+      ])
+
+      .on('start', (cmd) => {
+        console.log('CRIANDO CENA:')
+        console.log(cmd)
+      })
+
+      .on('end', () => {
+        console.log('CENA OK:')
+        console.log(outputPath)
+        resolve(outputPath)
+      })
+
+      .on('error', (err) => {
+        console.error(err)
+        reject(err)
+      })
+
+      .save(outputPath)
+
+  })
+}
 
 async function createTestVideo(
   totalScenes,
@@ -137,6 +187,35 @@ async function createTestVideo(
       .readdirSync(imagesDir)
       .filter(file => file.endsWith('.jpg'))
       .sort()
+
+    const scenesDir = path.join(
+  __dirname,
+  '../temp/scenes'
+)
+
+const firstImage = path.join(
+  imagesDir,
+  imageFiles[0]
+)
+
+const testSceneOutput = path.join(
+  scenesDir,
+  'scene1.mp4'
+)
+
+await createSceneVideo(
+  firstImage,
+  5,
+  testSceneOutput
+)
+
+return testSceneOutput
+
+console.log('======================')
+console.log('TESTE KEN BURNS OK')
+console.log(testSceneOutput)
+console.log('======================')
+
 
     console.log('TOTAL IMAGENS:', imageFiles.length)
 
