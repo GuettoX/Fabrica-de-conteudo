@@ -7,6 +7,7 @@ const {
   testDownloads,
   createTestVideo,
   uploadVideoToSupabase,
+  uploadThumbnailToSupabase,
   updateVideoRecord
 } = require('../services/videoService')
 
@@ -81,10 +82,17 @@ const fileSizeMb =
     console.log(videoUrl)
     console.log('====================')
 
-    const thumbnailUrl =
-  scenes.length > 0
-    ? scenes[0].media_url
-    : null
+const firstImagePath =
+  path.join(
+    __dirname,
+    '../temp/images/scene1.jpg'
+  )
+
+const thumbnailUrl =
+  await uploadThumbnailToSupabase(
+    firstImagePath,
+    scriptId
+  )
 
 const duration =
   voiceover?.duracao || null

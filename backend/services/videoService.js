@@ -352,6 +352,47 @@ return {
   fileSizeMb
 }
 }
+async function uploadThumbnailToSupabase(
+  imagePath,
+  scriptId
+) {
+  console.log('======================')
+  console.log('UPLOAD THUMBNAIL')
+  console.log('======================')
+
+  const fileBuffer =
+    fs.readFileSync(imagePath)
+
+  const fileName =
+    `${scriptId}-${Date.now()}.jpg`
+
+  const { error } =
+    await supabase.storage
+      .from('thumbnails')
+      .upload(
+        fileName,
+        fileBuffer,
+        {
+          contentType: 'image/jpeg',
+          upsert: true
+        }
+      )
+
+  if (error) {
+    console.error(error)
+    throw error
+  }
+
+  const { data } =
+    supabase.storage
+      .from('thumbnails')
+      .getPublicUrl(fileName)
+
+  console.log('THUMBNAIL URL:')
+  console.log(data.publicUrl)
+
+  return data.publicUrl
+}
 
 async function updateVideoRecord(
   videoId,
@@ -421,5 +462,6 @@ module.exports = {
   testDownloads,
   createTestVideo,
   uploadVideoToSupabase,
+  uploadThumbnailToSupabase,
   updateVideoRecord
 }
