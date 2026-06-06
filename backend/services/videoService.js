@@ -200,36 +200,41 @@ async function createTestVideo(
   '../temp/scenes'
 )
 
-const firstImage = path.join(
-  imagesDir,
-  imageFiles[0]
-)
-
-const testSceneOutput = path.join(
-  scenesDir,
-  'scene1.mp4'
-)
-
-await createSceneVideo(
-  firstImage,
-  5,
-  testSceneOutput
-)
-
-console.log('======================')
-console.log('TESTE KEN BURNS OK')
-console.log(testSceneOutput)
-console.log('======================')
-
-resolve(testSceneOutput)
-return
-
-
-    console.log('TOTAL IMAGENS:', imageFiles.length)
-
-    const durationPerScene =
+const durationPerScene =
   audioDuration / totalScenes
 
+const sceneVideos = []
+
+for (let i = 0; i < imageFiles.length; i++) {
+
+  const imagePath = path.join(
+    imagesDir,
+    imageFiles[i]
+  )
+
+  const sceneOutput = path.join(
+    scenesDir,
+    `scene${i + 1}.mp4`
+  )
+
+  console.log(
+    `CRIANDO CENA ${i + 1}`
+  )
+
+  await createSceneVideo(
+    imagePath,
+    durationPerScene,
+    sceneOutput
+  )
+
+  sceneVideos.push(sceneOutput)
+}
+
+console.log('======================')
+console.log('TODAS AS CENAS OK')
+console.log(sceneVideos)
+console.log('======================')
+console.log('TOTAL IMAGENS:', imageFiles.length)
 console.log('======================')
 console.log('DURACAO AUDIO:', audioDuration)
 console.log('TOTAL CENAS:', totalScenes)
