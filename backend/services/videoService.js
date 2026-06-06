@@ -114,6 +114,34 @@ async function createSceneVideo(
   outputPath
 ) {
 
+  const effects = [
+
+    // Zoom In
+    "zoompan=z='min(zoom+0.0015,1.15)':d=125:s=1280x720",
+
+    // Zoom Out
+    "zoompan=z='if(lte(zoom,1.15),1.15-0.0015*on,1)':d=125:s=1280x720",
+
+    // Pan Left
+    "zoompan=z=1.1:x='iw/2-(iw/zoom/2)-on*2':d=125:s=1280x720",
+
+    // Pan Right
+    "zoompan=z=1.1:x='on*2':d=125:s=1280x720"
+
+  ]
+
+  const randomEffect =
+    effects[
+      Math.floor(
+        Math.random() * effects.length
+      )
+    ]
+
+  console.log('======================')
+  console.log('EFEITO ESCOLHIDO')
+  console.log('======================')
+  console.log(randomEffect)
+
   return new Promise((resolve, reject) => {
 
     ffmpeg()
@@ -125,7 +153,7 @@ async function createSceneVideo(
       ])
 
       .videoFilters(
-        "zoompan=z='min(zoom+0.0015,1.15)':d=125:s=1280x720"
+        randomEffect
       )
 
       .videoCodec('libx264')
@@ -136,17 +164,23 @@ async function createSceneVideo(
       ])
 
       .on('start', (cmd) => {
-        console.log('CRIANDO CENA:')
+        console.log('======================')
+        console.log('CRIANDO CENA')
+        console.log('======================')
         console.log(cmd)
       })
 
       .on('end', () => {
-        console.log('CENA OK:')
+        console.log('======================')
+        console.log('CENA OK')
+        console.log('======================')
         console.log(outputPath)
+
         resolve(outputPath)
       })
 
       .on('error', (err, stdout, stderr) => {
+
         console.error('======================')
         console.error('ERRO CENA')
         console.error('======================')
