@@ -161,7 +161,7 @@ async function createTestVideo(
   totalScenes,
   audioDuration
 ) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const imagesDir = path.join(__dirname, '../temp/images')
 
     const audioPath = path.join(
@@ -209,12 +209,13 @@ await createSceneVideo(
   testSceneOutput
 )
 
-return testSceneOutput
-
 console.log('======================')
 console.log('TESTE KEN BURNS OK')
 console.log(testSceneOutput)
 console.log('======================')
+
+resolve(testSceneOutput)
+return
 
 
     console.log('TOTAL IMAGENS:', imageFiles.length)
