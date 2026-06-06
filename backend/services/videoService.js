@@ -116,19 +116,31 @@ async function createSceneVideo(
 
   const effects = [
 
-    // Zoom In
-    "zoompan=z='min(zoom+0.0015,1.15)':d=125:s=1280x720",
+  // Zoom In
+  "zoompan=z='min(zoom+0.0015,1.15)':d=125:s=1280x720",
 
-    // Zoom Out
-    "zoompan=z='if(lte(zoom,1.15),1.15-0.0015*on,1)':d=125:s=1280x720",
+  // Zoom Out
+  "zoompan=z='if(lte(zoom,1.15),1.15-0.0015*on,1)':d=125:s=1280x720",
 
-    // Pan Left
-    "zoompan=z=1.1:x='iw/2-(iw/zoom/2)-on*2':d=125:s=1280x720",
+  // Pan Left
+  "zoompan=z=1.1:x='iw/2-(iw/zoom/2)-on*2':d=125:s=1280x720",
 
-    // Pan Right
-    "zoompan=z=1.1:x='on*2':d=125:s=1280x720"
+  // Pan Right
+  "zoompan=z=1.1:x='on*2':d=125:s=1280x720",
 
-  ]
+  // Pan Up
+  "zoompan=z=1.1:y='ih/2-(ih/zoom/2)-on*2':d=125:s=1280x720",
+
+  // Pan Down
+  "zoompan=z=1.1:y='on*2':d=125:s=1280x720",
+
+  // Zoom Cinemático Lento
+  "zoompan=z='min(zoom+0.0008,1.08)':d=125:s=1280x720",
+
+  // Zoom Dramático
+  "zoompan=z='min(zoom+0.003,1.25)':d=125:s=1280x720"
+
+]
 
   const randomEffect =
     effects[
