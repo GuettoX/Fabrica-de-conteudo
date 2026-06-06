@@ -121,31 +121,25 @@ async function createSceneVideo(
 
   const effects = [
 
-    // Zoom In Progressivo
-    `zoompan=z='1+on*0.0004':d=${totalFrames}:s=1280x720`,
+  // Zoom In
+  `zoompan=z='1+on*0.0004':d=${totalFrames}:s=1280x720`,
 
-    // Zoom Out Progressivo
-    `zoompan=z='1.20-on*0.0004':d=${totalFrames}:s=1280x720`,
+  // Zoom Out
+  `zoompan=z='1.20-on*0.0004':d=${totalFrames}:s=1280x720`,
 
-    // Pan Left
-    `zoompan=z=1.1:x='iw/2-(iw/zoom/2)-on*1.5':d=${totalFrames}:s=1280x720`,
+  // Pan Right
+  `zoompan=z=1.1:x='(iw-iw/zoom)*(on/${totalFrames})':d=${totalFrames}:s=1280x720`,
 
-    // Pan Right
-    `zoompan=z=1.1:x='on*1.5':d=${totalFrames}:s=1280x720`,
+  // Pan Left
+  `zoompan=z=1.1:x='(iw-iw/zoom)*(1-on/${totalFrames})':d=${totalFrames}:s=1280x720`,
 
-    // Pan Up
-    `zoompan=z=1.1:y='ih/2-(ih/zoom/2)-on*1.5':d=${totalFrames}:s=1280x720`,
+  // Pan Down
+  `zoompan=z=1.1:y='(ih-ih/zoom)*(on/${totalFrames})':d=${totalFrames}:s=1280x720`,
 
-    // Pan Down
-    `zoompan=z=1.1:y='on*1.5':d=${totalFrames}:s=1280x720`,
+  // Pan Up
+  `zoompan=z=1.1:y='(ih-ih/zoom)*(1-on/${totalFrames})':d=${totalFrames}:s=1280x720`
 
-    // Zoom Cinemático Lento
-    `zoompan=z='1+on*0.0002':d=${totalFrames}:s=1280x720`,
-
-    // Zoom Dramático
-    `zoompan=z='1+on*0.0007':d=${totalFrames}:s=1280x720`
-
-  ]
+]
 
   const randomEffect =
     effects[
