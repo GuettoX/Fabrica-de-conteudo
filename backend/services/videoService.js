@@ -245,30 +245,25 @@ console.log(
 console.log('======================')
     let slidesContent = ''
 
-    imageFiles.forEach((file) => {
-  slidesContent += `file '${path.join(imagesDir, file)}'\n`
-  slidesContent += `duration ${durationPerScene}\n`
+sceneVideos.forEach((video) => {
+  slidesContent += `file '${video}'\n`
 })
 
-    if (imageFiles.length > 0) {
-      slidesContent += `file '${path.join(
-        imagesDir,
-        imageFiles[imageFiles.length - 1]
-      )}'\n`
-    }
+fs.writeFileSync(
+  slidesFile,
+  slidesContent
+)
 
-    fs.writeFileSync(slidesFile, slidesContent)
-
-    console.log('SLIDES.TXT CRIADO')
+console.log('VIDEOS.TXT CRIADO')
 
     ffmpeg()
-      .input(slidesFile)
-      .inputOptions([
-        '-f concat',
-        '-safe 0'
-      ])
+  .input(slidesFile)
+  .inputOptions([
+    '-f concat',
+    '-safe 0'
+  ])
 
-      .input(audioPath)
+  .input(audioPath)
 
       .videoCodec('libx264')
       .audioCodec('aac')
